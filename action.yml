@@ -1,0 +1,5 @@
+name: "Branching Model Check"
+description: "Action to check if the branches related to the pull-request do follow Flagbit's default branching model"
+runs:
+  using: "node16"
+  main: "index.js"

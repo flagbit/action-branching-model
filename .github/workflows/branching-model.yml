@@ -1,0 +1,9 @@
+name: Branching Model
+
+on: [pull_request]
+
+jobs:
+  branching-model:
+    name: Check Branching Model
+    steps:
+      - uses: flagbit/action-branching-model@0.1.0
