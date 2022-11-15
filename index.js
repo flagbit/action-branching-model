@@ -1,16 +1,13 @@
 #!/usr/bin/env node
 
+const REGEX_MAIN = /^main$/g;
+const REGEX_FEATURE = /^feature\/[A-Z]{1,10}-[0-9]{1,4}$/g;
+const REGEX_HOTFIX = /^hotfix\/[A-Z]{1,10}-[0-9]{1,4}$/g;
+const REGEX_RELEASE = /^release\/\d\.\d\.\d$/g;
+
 const BRANCHING_MODEL_MAP = {
-  develop: [
-    /^main$/g,
-    /^feature\/[A-Z]{1,10}-[0-9]{1,4}$/g,
-    /^hotfix\/[A-Z]{1,10}-[0-9]{1,4}$/g,
-    /^release\/[A-Z]{1,10}-[0-9]{1,4}$/g,
-  ],
-  main: [
-    /^hotfix\/[A-Z]{1,10}-[0-9]{1,4}$/g,
-    /^release\/[A-Z]{1,10}-[0-9]{1,4}$/g,
-  ],
+  develop: [REGEX_MAIN, REGEX_FEATURE, REGEX_HOTFIX, REGEX_RELEASE],
+  main: [REGEX_HOTFIX, REGEX_RELEASE],
 };
 
 // branch we are opening the PR from...
