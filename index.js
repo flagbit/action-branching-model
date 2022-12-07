@@ -5,10 +5,9 @@ const REGEX_FEATURE = /^feature\/[A-Z]{1,10}-[0-9]{1,4}$/g;
 const REGEX_HOTFIX = /^hotfix\/[A-Z]{1,10}-[0-9]{1,4}$/g;
 const REGEX_RELEASE = /^release\/\d\.\d\.\d$/g;
 
-const BRANCHING_MODEL_MAP = {
-  develop: [REGEX_MAIN, REGEX_FEATURE, REGEX_HOTFIX, REGEX_RELEASE],
-  main: [REGEX_HOTFIX, REGEX_RELEASE],
-};
+const BRANCHING_MODEL_MAP = new Map();
+BRANCHING_MODEL_MAP.set(REGEX_RELEASE, [REGEX_FEATURE]);
+BRANCHING_MODEL_MAP.set(REGEX_MAIN, [REGEX_RELEASE, REGEX_HOTFIX]);
 
 // branch we are opening the PR from...
 const HEAD_REF = process.env.GITHUB_HEAD_REF;
@@ -16,21 +15,40 @@ const HEAD_REF = process.env.GITHUB_HEAD_REF;
 // branch we are merging into...
 const BASE_REF = process.env.GITHUB_BASE_REF;
 
-// get list of allowed head-branches for this base-branch...
-const ALLOWED_HEAD_REFS = BRANCHING_MODEL_MAP[BASE_REF];
+for (const patternBaseRef of BRANCHING_MODEL_MAP.keys()) {
+  const matches = BASE_REF.match(patternBaseRef);
 
-//
-if (!ALLOWED_HEAD_REFS) {
-  console.log("No merges allowed into this base branch!");
-  process.exit(1);
-}
-
-for (let i = 0; i < ALLOWED_HEAD_REFS.length; i++) {
-  const allowedHeadRef = ALLOWED_HEAD_REFS[i];
-  const matches = HEAD_REF.match(allowedHeadRef);
   if (matches) {
-    process.exit(0);
+    console.log(
+      `Base branch is matching a definition in our branching-model => `,
+      patternBaseRef
+    );
+    const allowedHeadRefs = BRANCHING_MODEL_MAP.get(patternBaseRef);
+    console.log(
+      `Allowed head branches for this base branch are =>`,
+      allowedHeadRefs
+    );
+
+    for (const allowedHeadRef of allowedHeadRefs) {
+      const matches = HEAD_REF.match(allowedHeadRef);
+
+      if (matches) {
+        console.log(
+          `Head branch is matching this regular expression =>`,
+          allowedHeadRef
+        );
+        process.exit(0);
+      }
+
+      console.log(
+        `Head branch is not matching this regular expression =>`,
+        allowedHeadRef
+      );
+    }
   }
 }
 
+console.error(
+  `Branches of the pull request aren't matching our branching model!`
+);
 process.exit(1);

@@ -4,6 +4,7 @@ on: [pull_request]
 
 jobs:
   branching-model:
+    runs-on: ubuntu-latest
     name: Check Branching Model
     steps:
-      - uses: flagbit/action-branching-model@0.1.0
+      - uses: flagbit/action-branching-model@0.3.0
