@@ -15,6 +15,9 @@ const HEAD_REF = process.env.GITHUB_HEAD_REF;
 // branch we are merging into...
 const BASE_REF = process.env.GITHUB_BASE_REF;
 
+console.log(`head branch is ${HEAD_REF}.`);
+console.log(`base branch is ${BASE_REF}.`);
+
 for (const patternBaseRef of BRANCHING_MODEL_MAP.keys()) {
   const matches = BASE_REF.match(patternBaseRef);
 
