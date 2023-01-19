@@ -3,7 +3,7 @@
 const REGEX_MAIN = /^main$/g;
 const REGEX_FEATURE = /^feature\/[A-Z0-9]{1,10}-[0-9]{1,4}$/g;
 const REGEX_HOTFIX = /^hotfix\/[A-Z0-9]{1,10}-[0-9]{1,4}$/g;
-const REGEX_RELEASE = /^release\/\d\.\d\.\d$/g;
+const REGEX_RELEASE = /^release\/\d+\.\d+\.\d+$/g;
 
 const BRANCHING_MODEL_MAP = new Map();
 BRANCHING_MODEL_MAP.set(REGEX_RELEASE, [REGEX_FEATURE]);
