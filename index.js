@@ -18,6 +18,15 @@ const BASE_REF = process.env.GITHUB_BASE_REF;
 console.log(`head branch is ${HEAD_REF}.`);
 console.log(`base branch is ${BASE_REF}.`);
 
+// Bot branches (Renovate dependency updates, vulnguard AI security fixes) have their own
+// naming and target the default branch directly, so the branching model does not apply.
+const REGEX_BOT = /^(renovate|vulnguard)\//;
+
+if (REGEX_BOT.test(HEAD_REF)) {
+  console.log(`Head branch is a bot branch, skipping the branching model check.`);
+  process.exit(0);
+}
+
 for (const patternBaseRef of BRANCHING_MODEL_MAP.keys()) {
   const matches = BASE_REF.match(patternBaseRef);
 
